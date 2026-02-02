@@ -1,0 +1,37 @@
+# iisnode configuration file
+# For more info: https://github.com/tjanczuk/iisnode/blob/master/src/samples/configuration/iisnode.yml
+
+# Node.js executable path (optional, defaults to node.exe in PATH)
+# nodeProcessCommandLine: "C:\Program Files\nodejs\node.exe"
+
+# Logging
+loggingEnabled: true
+logDirectory: iisnode
+
+# Node.js options
+node_env: production
+
+# Enable debugging (set to false in production)
+debuggingEnabled: false
+
+# Max concurrent requests per node process
+maxConcurrentRequestsPerProcess: 1024
+
+# Number of node processes to create (0 = number of CPU cores)
+nodeProcessCountPerApplication: 0
+
+# Maximum number of retries for failed requests
+maxNamedPipeConnectionRetry: 24
+
+# Timeout for pending request queue (ms)
+pendingRequestTimeout: 120000
+
+# Files to watch for changes (restart on modification)
+watchedFiles: *.js;iisnode.yml;web.config
+
+# Enable node inspector debugger
+# debuggerPortRange: 5058-6058
+# debuggerPathSegment: debug
+
+# Enable native modules
+enableXFF: false
