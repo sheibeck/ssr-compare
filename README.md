@@ -7,8 +7,8 @@ This repository contains two functionally identical SSR (Server-Side Rendering) 
 ```
 /server/                   # Shared Express server
   ├── index.ts            # Express app with routes
-  ├── renderSearchPage.ts # SSR rendering for ssr-custom
-  └── safeSerialize.ts    # XSS-safe serialization
+  ├── renderSearchPage.ts # SSR rendering for SSR-CUSTOM
+  └── safeSerialize.ts    # XSS-safe serialization for SSR-CUSTOM
 
 /shared/                   # Shared business logic
   ├── types.ts            # TypeScript interfaces
