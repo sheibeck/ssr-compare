@@ -308,9 +308,9 @@ This design lets us compare: **How do you build SSR apps with different technolo
 
 #### **Less Modern Frontend Features**
 - No automatic code splitting or lazy loading (requires manual setup)
-- Full SPA-style client-side routing would require additional libraries (though current progressive enhancement approach works well)
-- More traditional request/response model compared to modern JS frameworks
-- JavaScript enhancements require manual implementation vs framework features
+- Client-side routing requires additional libraries
+- Less SPA-like feel without significant JavaScript additions
+- Traditional request/response model vs modern JS frameworks
 
 #### **Team Skillset Requirements**
 - Requires .NET/C# developers (or training)
@@ -357,35 +357,6 @@ This design lets us compare: **How do you build SSR apps with different technolo
 | **Routing** | Manual URL handling | Vue Router automatic |
 | **Hydration** | Manual event binding | Framework handles |
 | **Production Readiness** | Requires hardening | Production-ready |
-| *🎯 ssr-razor (ASP.NET Core + Razor)
-
-**Philosophy:** Use native Windows/.NET technology for optimal IIS integration and performance.
-
-### ✅ Strengths
-
-#### **Native IIS Integration**
-- **No iisnode required** - ASP.NET Core runs natively on IIS
-- Better performance on Windows servers
-- Simplified deployment (just copy files)
-- Native Windows authentication and security
-
-#### **Clean Template Syntax**
-- **Razor templates** - Clean HTML with embedded C# logic
-- Automatic XSS protection with `@` syntax
-- Type-safe view models with compile-time checking
-- IntelliSense support in Visual Studio
-
-#### **Progressive Enhancement**
-- Server renders initial HTML (SEO friendly)
-- Client JavaScript adds infinite scroll and AJAX
-- Works without JavaScript (falls back to pagination)
-- Best of both worlds: SSR + SPA-like interactions
-
-#### **Enterprise Ready**
-- Battle-tested ASP.NET Core framework
-- Excellent performance and scalability
-- Built-in security features (CSRF, authentication)
-- Strong typing throughout the stack
 
 ---
 
