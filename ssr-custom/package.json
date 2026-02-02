@@ -1,0 +1,18 @@
+{
+  "name": "ssr-demo",
+  "version": "1.0.0",
+  "description": "Minimal SSR demo with TypeScript - no frameworks",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/client/index.ts --bundle --format=esm --outfile=dist/client/client.js --target=es2020",
+    "dev": "esbuild src/client/index.ts --bundle --format=esm --outfile=dist/client/client.js --target=es2020 --watch"
+  },
+  "keywords": ["ssr", "typescript", "demo"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "esbuild": "^0.19.11",
+    "typescript": "^5.3.3"
+  }
+}
