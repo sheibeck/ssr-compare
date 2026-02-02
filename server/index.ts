@@ -15,7 +15,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static assets for ssr-custom (client bundle)
+// Serve static assets for SSR-CUSTOM (client bundle)
 app.use('/assets', express.static('ssr-custom/dist/client'));
 
 // API endpoint - shared by both implementations
@@ -35,7 +35,7 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
-// SSR route for ssr-custom implementation
+// SSR route for SSR-CUSTOM implementation
 app.get('/custom/search', async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
