@@ -525,42 +525,34 @@ For projects requiring rich UX features like vehicle search:
 
 ### For Rich UX Vehicle Search (with all features)
 
-#### ssr-razor (Vanilla JS) - Total: ~53KB gzipped
+#### ssr-razor/ssr-custom (Vanilla JS) - Total: ~53KB gzipped
 
-| Component | Size | Notes |
-|-----------|------|-------|
-| Initial core JS | ~8KB gzipped | Event delegation, utilities |
-| Compare modal | ~30KB uncompressed | Hand-written state management, DOM updates |
-| Carousel (Swiper) | ~45KB minified | Third-party library + glue code |
-| Infinite scroll | ~15KB uncompressed | Manual observers, duplicate detection |
-| Window sticker | ~10KB uncompressed | Modal + API integration |
-| DOMPurify | ~20KB uncompressed | HTML sanitization |
-| Drawer logic | ~12KB uncompressed | Focus trap, transitions |
-| **Total** | **~157KB uncompressed** | **~53KB gzipped** |
+| Component | Gzipped Size (approx) | Notes |
+|-----------|------------------------|-------|
+| Initial core JS | ~8KB | Event delegation, shared utilities, Requires manual code splitting and continuous upkeep as features grow |
+| Compare modal | ~10KB | Hand-written state + DOM updates |
+| Carousel (Swiper) | ~28KB | Third-party library + glue code |
+| Infinite scroll | ~4KB | Manual observers, duplicate detection |
+| Window sticker | ~2KB | Modal + API integration |
 
 **Challenges:** No tree-shaking, manual dependency management, more verbose due to manual state and DOM management
 
 #### ssr-vue (Nuxt) - Total: ~102KB gzipped
 
-| Component | Size | Notes |
-|-----------|------|-------|
-| Initial bundle | ~45KB gzipped | Vue runtime + Pinia + page code |
-| Compare modal | ~18KB gzipped | Lazy-loaded component |
-| Carousel | ~28KB gzipped | Vue-integrated component |
-| Infinite scroll | ~6KB gzipped | Composable pattern |
-| Window sticker | ~5KB gzipped | Lazy component |
-| **Total** | **~102KB gzipped** | Better caching, parallel loading |
+| Component | Gzipped Size | Notes |
+|-----------|--------------|-------|
+| Initial bundle | ~45KB | Vue runtime + Pinia + page code, Automatic code splitting via Nuxt |
+| Compare modal | ~18KB | Lazy-loaded component |
+| Carousel | ~28KB | Vue-integrated component |
+| Infinite scroll | ~6KB | Composable pattern |
+| Window sticker | ~5KB | Lazy-loaded component |
 
 **Benefits:** Automatic tree-shaking, optimal chunk splitting, automatic dependency tracking, prefetching
-
-#### ssr-custom - Minimal (~5-10KB)
-
-Minimal bundle but requires building all features manually (similar challenges to ssr-razor)
 
 ### Bundle Size Verdict
 
 **Initial Load:** ssr-razor/ssr-custom win (~8KB vs ~45KB)  
-**Full App:** Nuxt wins (~102KB vs ~157KB with better caching)  
+**Full App:** ssr-razor/ssr-custom wins (~102KB vs ~52KB, but it needs manual, maintained code splitting and manual lazy loading)
 **Development Time:** Nuxt wins significantly (write 50-80% less code)
 
 ---
