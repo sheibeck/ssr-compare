@@ -64,15 +64,22 @@ async function fetchResults(filters: any) {
       if (filters[key]) params.append(key, filters[key]);
     });
     
+    // Fetch server-rendered HTML (SSR benefit - already rendered, just send it)
     const response = await fetch(`/Search/Results?${params.toString()}`, {
       headers: { 'X-Requested-With': 'XMLHttpRequest' }
     });
     
     if (response.ok) {
       const html = await response.text();
-      const resultsEl = document.querySelector('[data-island="search-results"]');
-      if (resultsEl) {
-        resultsEl.innerHTML = html;
+      const resultsContainer = document.querySelector('[data-island="search-results"]')?.parentElement;
+      
+      if (resultsContainer) {
+        // Display server-rendered HTML immediately (fast!)
+        resultsContainer.innerHTML = html;
+        
+        // Re-hydrate the island for Vue interactivity
+        const { rehydrateIsland } = await import('../main');
+        rehydrateIsland(resultsContainer, 'search-results');
       }
     }
   } catch (error) {

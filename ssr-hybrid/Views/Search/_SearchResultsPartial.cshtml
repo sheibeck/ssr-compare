@@ -1,5 +1,19 @@
 @model List<SsrHybrid.Models.Vehicle>
+@{
+    var resultsJson = System.Text.Json.JsonSerializer.Serialize(Model.Select(v => new
+    {
+        id = v.Id,
+        make = v.Make,
+        model = v.Model,
+        year = v.Year,
+        price = v.Price,
+        imageUrl = v.ImageUrl
+    }));
+}
 
+<!-- Embed data for Vue re-hydration -->
+<div data-island="search-results" 
+     data-props='@Html.Raw(resultsJson)'>
 @if (Model.Any())
 {
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
@@ -31,3 +45,4 @@ else
         <p>No vehicles found matching your criteria.</p>
     </div>
 }
+</div>

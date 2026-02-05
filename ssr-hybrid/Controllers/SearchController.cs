@@ -53,9 +53,39 @@ public class SearchController : Controller
 
         if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
+            // Return server-rendered HTML with embedded data for re-hydration
             return PartialView("_SearchResultsPartial", results);
         }
 
         return RedirectToAction("Index", new { make, model, year, minPrice, maxPrice });
+    }
+
+    [HttpGet]
+    public IActionResult ResultsJson(string? make, string? model, string? year, int? minPrice, int? maxPrice)
+    {
+        // Alternative endpoint that returns pure JSON for client-side rendering
+        var filters = new SearchFilters
+        {
+            Make = make,
+            Model = model,
+            Year = year,
+            MinPrice = minPrice,
+            MaxPrice = maxPrice
+        };
+
+        var results = _searchService.SearchVehicles(filters);
+
+        return Json(new { 
+            success = true,
+            count = results.Count,
+            results = results.Select(v => new {
+                id = v.Id,
+                make = v.Make,
+                model = v.Model,
+                year = v.Year,
+                price = v.Price,
+                imageUrl = v.ImageUrl
+            })
+        });
     }
 }

@@ -37,9 +37,7 @@ function formatPrice(price: number): string {
 
 <template>
   <div class="search-results">
-    <div v-if="loading" class="loading">Loading...</div>
-    
-    <div v-else-if="results.length === 0" class="no-results">
+    <div v-if="results.length === 0" class="no-results">
       <p>No vehicles found matching your criteria.</p>
     </div>
     
@@ -48,6 +46,8 @@ function formatPrice(price: number): string {
         v-for="vehicle in results" 
         :key="vehicle.id" 
         class="vehicle-card"
+        :class="{ 'selected': isSelected(vehicle.id) }"
+        @click="selectVehicle(vehicle.id)"
       >
         <div class="vehicle-image">
           <img 
@@ -61,7 +61,20 @@ function formatPrice(price: number): string {
         <div class="vehicle-info">
           <h4>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h4>
           <p class="price">{{ formatPrice(vehicle.price) }}</p>
-          <button class="view-details">View Details</button>
+          
+          <!-- Client-side rich UX: expandable details -->
+          <button class="view-details" @click.stop="selectVehicle(vehicle.id)">
+            {{ isSelected(vehicle.id) ? 'Hide Details' : 'View Details' }}
+          </button>
+          
+          <transition name="fade">
+            <div v-if="isSelected(vehicle.id)" class="expanded-details">
+              <p><strong>Make:</strong> {{ vehicle.make }}</p>
+              <p><strong>Model:</strong> {{ vehicle.model }}</p>
+              <p><strong>Year:</strong> {{ vehicle.year }}</p>
+              <p><strong>Price:</strong> {{ formatPrice(vehicle.price) }}</p>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -168,5 +181,29 @@ function formatPrice(price: number): string {
   padding: 1rem;
   color: #666;
   font-size: 0.95rem;
+}
+
+.vehicle-card.selected {
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  border-color: #2196F3;
+}
+
+.expanded-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.expanded-details p {
+  margin: 0.5rem 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>

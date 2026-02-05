@@ -73,9 +73,7 @@
             }
         }
 
-        .ssr-content {
-            display: none;
-        }
+        /* No need to hide SSR content - Vue will take over the same structure */
 
         .results-header {
             margin-bottom: 1.5rem;
@@ -101,8 +99,8 @@
                 <div 
                     data-island="search-filters" 
                     data-props='@Html.Raw(filtersJson)'>
-                    <!-- SSR Fallback Content (visible without JS) -->
-                    <div class="ssr-content">
+                    <!-- Progressive enhancement: works without JS via traditional form -->
+                    <noscript>
                         <form method="get" action="/Search">
                             <div style="padding: 1.5rem; background: #f5f5f5; border-radius: 8px;">
                                 <h3 style="margin-bottom: 1rem;">Filter Results</h3>
@@ -129,22 +127,23 @@
                                 <button type="submit" style="width: 100%; padding: 0.75rem; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Apply Filters</button>
                             </div>
                         </form>
-                    </div>
+                    </noscript>
                 </div>
             </aside>
 
             <!-- Results Island - Hydrates with Vue -->
-            <section>
+            <section id="results-container">
                 <div class="results-header">
                     <h2>Search Results</h2>
                     <p>@Model.TotalCount vehicle(s) found</p>
                 </div>
 
+                <!-- Server renders HTML, Vue hydrates for interactivity -->
                 <div 
                     data-island="search-results" 
                     data-props='@Html.Raw(resultsJson)'>
-                    <!-- SSR Fallback Content -->
-                    <div class="ssr-content">
+                    <!-- Server-rendered content (no fallback needed) -->
+                    <div class="results-grid">
                         @if (Model.Results.Any())
                         {
                             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
