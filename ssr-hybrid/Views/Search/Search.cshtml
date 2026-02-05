@@ -1,0 +1,191 @@
+@model SsrHybrid.Models.SearchViewModel
+@{
+    ViewData["Title"] = "Vehicle Search";
+    var filtersJson = System.Text.Json.JsonSerializer.Serialize(new
+    {
+        initialMake = Model.Filters.Make ?? "",
+        initialModel = Model.Filters.Model ?? "",
+        initialYear = Model.Filters.Year ?? "",
+        initialMinPrice = Model.Filters.MinPrice ?? 0,
+        initialMaxPrice = Model.Filters.MaxPrice ?? 100000
+    });
+    
+    var resultsJson = System.Text.Json.JsonSerializer.Serialize(Model.Results.Select(v => new
+    {
+        id = v.Id,
+        make = v.Make,
+        model = v.Model,
+        year = v.Year,
+        price = v.Price,
+        imageUrl = v.ImageUrl
+    }));
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .search-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @@media (max-width: 768px) {
+            .search-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ssr-content {
+            display: none;
+        }
+
+        .results-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .results-header h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Vehicle Search - Hybrid SSR</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="search-layout">
+            <!-- Filters Island - Hydrates with Vue -->
+            <aside>
+                <div 
+                    data-island="search-filters" 
+                    data-props='@Html.Raw(filtersJson)'>
+                    <!-- SSR Fallback Content (visible without JS) -->
+                    <div class="ssr-content">
+                        <form method="get" action="/Search">
+                            <div style="padding: 1.5rem; background: #f5f5f5; border-radius: 8px;">
+                                <h3 style="margin-bottom: 1rem;">Filter Results</h3>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem;">Make</label>
+                                    <input type="text" name="make" value="@Model.Filters.Make" style="width: 100%; padding: 0.5rem;" />
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem;">Model</label>
+                                    <input type="text" name="model" value="@Model.Filters.Model" style="width: 100%; padding: 0.5rem;" />
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem;">Year</label>
+                                    <input type="text" name="year" value="@Model.Filters.Year" style="width: 100%; padding: 0.5rem;" />
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem;">Min Price</label>
+                                    <input type="number" name="minPrice" value="@Model.Filters.MinPrice" style="width: 100%; padding: 0.5rem;" />
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem;">Max Price</label>
+                                    <input type="number" name="maxPrice" value="@Model.Filters.MaxPrice" style="width: 100%; padding: 0.5rem;" />
+                                </div>
+                                <button type="submit" style="width: 100%; padding: 0.75rem; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Apply Filters</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Results Island - Hydrates with Vue -->
+            <section>
+                <div class="results-header">
+                    <h2>Search Results</h2>
+                    <p>@Model.TotalCount vehicle(s) found</p>
+                </div>
+
+                <div 
+                    data-island="search-results" 
+                    data-props='@Html.Raw(resultsJson)'>
+                    <!-- SSR Fallback Content -->
+                    <div class="ssr-content">
+                        @if (Model.Results.Any())
+                        {
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                                @foreach (var vehicle in Model.Results)
+                                {
+                                    <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                        <div style="width: 100%; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                            @if (!string.IsNullOrEmpty(vehicle.ImageUrl))
+                                            {
+                                                <img src="@vehicle.ImageUrl" alt="@vehicle.Year @vehicle.Make @vehicle.Model" style="width: 100%; height: 100%; object-fit: cover;" />
+                                            }
+                                            else
+                                            {
+                                                <span style="color: #999;">No Image</span>
+                                            }
+                                        </div>
+                                        <div style="padding: 1rem;">
+                                            <h4 style="margin: 0 0 0.5rem 0;">@vehicle.Year @vehicle.Make @vehicle.Model</h4>
+                                            <p style="font-size: 1.25rem; font-weight: bold; color: #4CAF50; margin: 0.5rem 0;">@vehicle.Price.ToString("C0")</p>
+                                            <button style="width: 100%; padding: 0.75rem; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">View Details</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="text-align: center; padding: 3rem; background: #f9f9f9; border-radius: 8px;">
+                                <p>No vehicles found matching your criteria.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Vue Islands - Only load what's needed -->
+    @if (Context.Request.Headers["X-Requested-With"] != "XMLHttpRequest")
+    {
+        <script type="module" src="~/dist/assets/main.js"></script>
+    }
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Ignore build outputs
+bin/
+obj/
+publish/
+wwwroot/dist/
+
+# Ignore logs
+logs/
+*.log
+
+# Client dependencies
+client/node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
