@@ -7,6 +7,25 @@
 
 ---
 
+┌─────────────────────────────────────────────┐
+│         ASP.NET Core (IIS/Kestrel)          │
+│  ✅ SSR (Razor renders HTML)                 │
+│  ✅ Routing (MVC Controllers)                │
+│  ✅ API Endpoints (Controllers)              │
+│  ✅ Data Layer (Services/EF Core)            │
+│  ✅ Business Logic (C#)                      │
+└────────────────┬────────────────────────────┘
+                 │
+                 │ Sends HTML with embedded data
+                 ▼
+┌─────────────────────────────────────────────┐
+│         Vue 3 Islands (Client-Side)         │
+│  ✅ Hydration (takes over HTML)              │
+│  ✅ Interactivity (clicks, animations)       │
+│  ✅ Client State (selections, toggles)       │
+│  ✅ Small (~27 KB)                           │
+└─────────────────────────────────────────────┘
+
 ## What Changed
 
 ### 1. Centralized Island Management (`main.ts`)
