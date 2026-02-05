@@ -87,8 +87,22 @@
 
 ---
 
+# Vue
+
 ## How small can we make the Vue footprint
 
 - Petite-Vue	~6 KB	"Vanilla" feel with Vue syntax for existing HTML.
 - Reactivity Core	~4 KB	State management only (no UI rendering).
 - Vue 3 (Runtime)	~16–19 KB	Full component architecture and Virtual DOM.
+
+## Vue vs Vanilla JS Comparison
+
+| Task               | Vue (Lines)        | Vanilla JS (Lines)       | Difference        |
+|--------------------|-------------------|--------------------------|-------------------|
+| State Management   | 5                 | 25                       | 5× more code     |
+| Two-way Binding    | 1 (`v-model`)     | 10 (manual sync)         | 10× more code    |
+| Change Detection   | 1 (`watch`)       | 15 (listeners)           | 15× more code    |
+| Reset Function     | 6                 | 15                       | 2.5× more code   |
+| Back Button Sync   | 0 (auto)          | 20                       | Vue handles it   |
+| **Total**          | **~100 lines**    | **~200+ lines**          | **~2× more code** |
+
